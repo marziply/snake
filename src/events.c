@@ -32,8 +32,8 @@ void exec_event (SDL_Event *sdl_event) {
 }
 
 void update () {
-  iterate_tiles((void *) &direct_tile);
-  iterate_tiles((void *) &move_tile);
+  iter_tiles((void *) &direct_tile);
+  iter_tiles((void *) &move_tile);
 }
 
 void poll () {
@@ -60,7 +60,7 @@ void poll () {
 
     time_since += TICK;
 
-    iterate_tiles((void *) &paint_tiles);
+    iter_tiles((void *) &paint_tiles);
 
     SDL_RenderPresent(display.renderer);
 

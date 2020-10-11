@@ -9,6 +9,6 @@ struct HeadPos {
   int x, y;
 } head_pos;
 
-void iterate_tiles (void *fn (int fx, int fy));
+void iter_tiles (void *fn (int fx, int fy));
 void paint_tiles (int x, int y);
 void create_map ();

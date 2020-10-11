@@ -1,7 +1,7 @@
 #include "map.h"
 #include "colours.h"
 
-void iterate_tiles (void *fn (int fx, int fy)) {
+void iter_tiles (void *fn (int fx, int fy)) {
   for (int x = 0; x < WIN_TILE_WIDTH; x++) {
     for (int y = 0; y < WIN_TILE_HEIGHT; y++) {
       fn(x, y);
