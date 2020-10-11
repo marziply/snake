@@ -1,6 +1,7 @@
 CC = gcc
 EXE = snake
-C_FLAGS = -std=gnu18 -c -g -Wall
+DEV_C_FLAGS = -g -Wall
+C_FLAGS = $(DEV_C_FLAGS) -std=gnu18 -c
 SOURCES=$(wildcard src/*.c)
 OBJECTS = $(patsubst src/%.c,build/%.o,$(SOURCES))
 SDL_C_FLAGS := $(shell sdl2-config --cflags)
