@@ -1,5 +1,5 @@
 CC = gcc
-EXE = game
+EXE = snake
 C_FLAGS = -std=gnu18 -c -g -Wall
 SOURCES=$(wildcard src/*.c)
 OBJECTS = $(patsubst src/%.c,build/%.o,$(SOURCES))
