@@ -20,5 +20,5 @@ void paint_tiles (int x, int y) {
 }
 
 void create_map () {
-  iterate_tiles((void *) &create_tiles);
+  iter_tiles((void *) &create_tiles);
 };
