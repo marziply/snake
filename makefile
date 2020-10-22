@@ -1,6 +1,8 @@
 CC = gcc
 EXE = snake
 DEV_C_FLAGS = -g -Wall
+# -fsanitize=address
+BUILD_DIR = ./build
 C_FLAGS = $(DEV_C_FLAGS) -std=gnu18 -c
 SOURCES=$(wildcard src/*.c)
 OBJECTS = $(patsubst src/%.c,build/%.o,$(SOURCES))
@@ -10,10 +12,12 @@ SDL_LIBS := $(shell sdl2-config --libs)
 all: $(EXE)
 
 $(EXE): $(notdir $(OBJECTS))
-	$(CC) $(SDL_C_FLAGS) $(OBJECTS) -o $@ $(SDL_LIBS)
+	$(CC) $(DEV_C_FLAGS) $(SDL_C_FLAGS) $(OBJECTS) -o $@ $(SDL_LIBS)
 
 %.o: src/%.c
-	$(CC) $(C_FLAGS) $< -o build/$@
+	@mkdir -p $(BUILD_DIR)
+
+	$(CC) $(C_FLAGS) $< -o $(BUILD_DIR)/$@
 
 clean:
-	rm build/*.o && rm $(EXE)
+	rm -rf $(BUILD_DIR)/*.o $(EXE)
