@@ -1,28 +1,20 @@
-#include "tile.h" 
-#include "map.h"
-#include "display.h"
+#include "tile.h"
 #include "colours.h"
+#include "display.h"
+#include "map.h"
 
-void paint_tile (Tile *tile) {
+void paint_tile(Tile *tile) {
   SDL_Color colour = tile->colour;
   Display *display = tile->map->display;
 
-  SDL_SetRenderDrawColor(
-    display->renderer,
-    colour.r,
-    colour.g,
-    colour.b,
-    colour.a
-  );
+  SDL_SetRenderDrawColor(display->renderer, colour.r, colour.g, colour.b,
+                         colour.a);
   SDL_RenderFillRect(tile->map->display->renderer, &tile->rect);
 }
 
-Tile *create_tile (int x, int y, bool is_head, Map *map) {
+Tile *create_tile(int x, int y, bool is_head, Map *map) {
   SDL_Rect rect = {
-    .x = x * TILE_SIZE,
-    .y = y * TILE_SIZE,
-    .w = TILE_SIZE,
-    .h = TILE_SIZE
+    .x = x * TILE_SIZE, .y = y * TILE_SIZE, .w = TILE_SIZE, .h = TILE_SIZE
   };
 
   Tile *tile = (Tile *) malloc(sizeof(Tile));
@@ -41,13 +33,13 @@ Tile *create_tile (int x, int y, bool is_head, Map *map) {
   return tile;
 }
 
-void set_tile_movement (Tile *tile, int mx, int my) {
+void set_tile_movement(Tile *tile, int mx, int my) {
   int x = tile->pos_x;
   int y = tile->pos_y;
   bool x_free = x + 1 < WIN_TILE_WIDTH && x - 1 >= 0;
   bool y_free = y + 1 < WIN_TILE_HEIGHT && y - 1 >= 0;
 
-  if (x_free && y_free){
+  if (x_free && y_free) {
     if (tile->is_head) {
       tile->map->head_pos.x = x + mx;
       tile->map->head_pos.y = y + my;
@@ -61,7 +53,7 @@ void set_tile_movement (Tile *tile, int mx, int my) {
   }
 }
 
-void direct_tile (int x, int y, Map *map) {
+void direct_tile(int x, int y, Map *map) {
   Tile *tile = map->tiles[x][y];
 
   switch (tile->direction) {
@@ -82,7 +74,7 @@ void direct_tile (int x, int y, Map *map) {
   }
 }
 
-void move_tile (int x, int y, Map *map) {
+void move_tile(int x, int y, Map *map) {
   Tile *tile = map->tiles[x][y];
 
   if (tile->direction > 0) {

@@ -1,1 +1,1 @@
-void print_error (char *c);
+void print_error(char *c);

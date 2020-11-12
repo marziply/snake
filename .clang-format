@@ -1,0 +1,10 @@
+BasedOnStyle: LLVM
+Language: Cpp
+ColumnLimit: 80
+IndentWidth: 2
+IndentCaseLabels: false
+PointerAlignment: Right
+AlignEscapedNewlines: Left
+AllowShortFunctionsOnASingleLine: false
+SpaceAfterCStyleCast: true
+Cpp11BracedListStyle: false

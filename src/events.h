@@ -10,4 +10,4 @@ typedef struct Events {
   SDL_Event update_event;
 } Events;
 
-void poll (struct Map map);
+void poll(struct Map map);

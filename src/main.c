@@ -1,11 +1,11 @@
-#include <SDL2/SDL.h>
-#include <stdio.h>
-#include "error.h"
 #include "display.h"
+#include "error.h"
 #include "events.h"
 #include "map.h"
+#include <SDL2/SDL.h>
+#include <stdio.h>
 
-void init () {
+void init() {
   if (SDL_Init(SDL_INIT_VIDEO) < 0) {
     printf("error: %s\n", SDL_GetError());
     // print_error("Init");
@@ -14,7 +14,7 @@ void init () {
   }
 }
 
-int main (int argc, char **argv) {
+int main(int argc, char **argv) {
   int i = SDL_Init(SDL_INIT_VIDEO);
 
   if (i != 0) {
@@ -25,7 +25,7 @@ int main (int argc, char **argv) {
 
   // Display display = create_display();
   // Map map = create_map(display);
-  // 
+  //
   // poll(map);
   // SDL_Window *window = SDL_CreateWindow(
   //     WIN_TITLE,
@@ -39,7 +39,7 @@ int main (int argc, char **argv) {
   printf("test\n");
 
   // SDL_Event event;
-  // 
+  //
   // SDL_PollEvent(&event);
 
   return 0;
