@@ -6,4 +6,4 @@ typedef struct Display {
   SDL_Renderer *renderer;
 } Display;
 
-Display create_display ();
+Display create_display();
