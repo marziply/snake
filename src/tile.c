@@ -4,17 +4,19 @@
 #include "map.h"
 
 void paint_tile(Tile *tile) {
-  SDL_Color colour = tile->colour;
+  SDL_Color col = tile->colour;
   Display *display = tile->map->display;
 
-  SDL_SetRenderDrawColor(display->renderer, colour.r, colour.g, colour.b,
-                         colour.a);
+  SDL_SetRenderDrawColor(display->renderer, col.r, col.g, col.b, col.a);
   SDL_RenderFillRect(tile->map->display->renderer, &tile->rect);
 }
 
 Tile *create_tile(int x, int y, bool is_head, Map *map) {
   SDL_Rect rect = {
-    .x = x * TILE_SIZE, .y = y * TILE_SIZE, .w = TILE_SIZE, .h = TILE_SIZE
+    .x = x * TILE_SIZE,
+    .y = y * TILE_SIZE,
+    .w = TILE_SIZE,
+    .h = TILE_SIZE,
   };
 
   Tile *tile = (Tile *) malloc(sizeof(Tile));

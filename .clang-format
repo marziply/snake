@@ -6,5 +6,12 @@ IndentCaseLabels: false
 PointerAlignment: Right
 AlignEscapedNewlines: Left
 AllowShortFunctionsOnASingleLine: false
+AllowShortBlocksOnASingleLine: false
+AllowShortCaseLabelsOnASingleLine: false
+AllowShortIfStatementsOnASingleLine: false
+AllowShortLoopsOnASingleLine: false
 SpaceAfterCStyleCast: true
 Cpp11BracedListStyle: false
+BinPackArguments: false
+AlignAfterOpenBracket: false
+InsertTrailingCommas: Wrapped

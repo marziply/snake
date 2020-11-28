@@ -4,6 +4,7 @@
 #include "map.h"
 #include <SDL2/SDL.h>
 #include <stdio.h>
+#include <stdlib.h>
 
 void init() {
   if (SDL_Init(SDL_INIT_VIDEO) < 0) {

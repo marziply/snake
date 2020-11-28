@@ -40,9 +40,9 @@ void exec_event(Events *events, Map *map) {
   }
 }
 
-void update() {
-  iter_tiles((void *) &direct_tile, NULL);
-  iter_tiles((void *) &move_tile, NULL);
+void update(Map *map) {
+  iter_tiles((void *) &direct_tile, map);
+  iter_tiles((void *) &move_tile, map);
 }
 
 void poll(Map map) {
@@ -65,7 +65,7 @@ void poll(Map map) {
     if (time_since >= 1.0) {
       time_since = 0.0;
 
-      update();
+      update(&map);
     }
 
     if (SDL_PollEvent(&events.sdl_event)) {
@@ -74,7 +74,7 @@ void poll(Map map) {
 
     time_since += TICK;
 
-    iter_tiles((void *) &paint_tiles, NULL);
+    iter_tiles((void *) &paint_tiles, &map);
 
     SDL_RenderPresent(map.display->renderer);
 

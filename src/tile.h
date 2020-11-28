@@ -2,7 +2,13 @@
 #include <SDL2/SDL.h>
 #include <stdbool.h>
 
-enum Direction { none, up, down, left, right };
+enum Direction {
+  none,
+  up,
+  down,
+  left,
+  right,
+};
 
 typedef struct Tile {
   int move_to_x, move_to_y;
