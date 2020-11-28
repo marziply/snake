@@ -28,8 +28,12 @@ int main(int argc, char **argv) {
 
   poll(map);
 
-  SDL_CreateWindow(WIN_TITLE, SDL_WINDOWPOS_UNDEFINED, SDL_WINDOWPOS_UNDEFINED,
-                   -1, -1, SDL_WINDOW_OPENGL);
+  SDL_CreateWindow(WIN_TITLE,
+      SDL_WINDOWPOS_UNDEFINED,
+      SDL_WINDOWPOS_UNDEFINED,
+      -1,
+      -1,
+      SDL_WINDOW_OPENGL);
 
   SDL_Event event;
 
