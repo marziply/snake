@@ -1,5 +1,6 @@
 BasedOnStyle: LLVM
 Language: Cpp
+Standard: Latest
 ColumnLimit: 80
 IndentWidth: 2
 IndentCaseLabels: false
@@ -10,8 +11,11 @@ AllowShortBlocksOnASingleLine: false
 AllowShortCaseLabelsOnASingleLine: false
 AllowShortIfStatementsOnASingleLine: false
 AllowShortLoopsOnASingleLine: false
+AllowAllArgumentsOnNextLine: false
 SpaceAfterCStyleCast: true
 Cpp11BracedListStyle: false
 BinPackArguments: false
-AlignAfterOpenBracket: false
+BinPackParameters: false
+AlignAfterOpenBracket: AlwaysBreak
 InsertTrailingCommas: Wrapped
+UseTab: Never

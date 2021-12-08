@@ -1,43 +1,26 @@
-#include "display.h"
 #include "error.h"
-#include "events.h"
-#include "map.h"
+#include "game.h"
 #include <SDL2/SDL.h>
 #include <stdio.h>
 #include <stdlib.h>
 
-void init() {
+int main(int argc, char **argv) {
   if (SDL_Init(SDL_INIT_VIDEO) < 0) {
-    printf("error: %s\n", SDL_GetError());
+    printf("Error: %s\n", SDL_GetError());
 
     exit(1);
   }
-}
 
-int main(int argc, char **argv) {
-  int i = SDL_Init(SDL_INIT_VIDEO);
+  srand(time(0));
 
-  if (i != 0) {
-    printf("error: %s", SDL_GetError());
+  struct Window window = init_window();
+  struct State state = init_state();
+
+  while (true) {
+    if (!loop(&window, &state)) {
+      break;
+    }
   }
-
-  init();
-
-  Display display = create_display();
-  Map map = create_map(display);
-
-  poll(map);
-
-  SDL_CreateWindow(WIN_TITLE,
-      SDL_WINDOWPOS_UNDEFINED,
-      SDL_WINDOWPOS_UNDEFINED,
-      -1,
-      -1,
-      SDL_WINDOW_OPENGL);
-
-  SDL_Event event;
-
-  SDL_PollEvent(&event);
 
   return 0;
 }
