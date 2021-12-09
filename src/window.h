@@ -1,4 +1,5 @@
 #include <SDL2/SDL.h>
+#include <math.h>
 
 #define N_TILES 20
 #define TILE_SIZE 25

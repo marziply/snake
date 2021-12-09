@@ -2,6 +2,7 @@
 #include "colours.h"
 #include "events.h"
 #include "utils.h"
+#include <stdlib.h>
 
 struct Direction rand_dir() {
   int head_dx = rand_range(-1, 1);
