@@ -76,15 +76,7 @@ double next_tick(struct Tick *tick) {
 }
 
 bool is_boundary(int pos, int delta) {
-  switch (delta) {
-  case 1:
-    return pos == WIN_EDGE;
-
-  case -1:
-    return pos == 0;
-  }
-
-  return false;
+  return delta ? pos == ((delta + 1) / 2) * WIN_EDGE : false;
 }
 
 bool is_moveable(struct Direction dir, int x, int y) {
