@@ -1,5 +1,5 @@
-#include "tile.h"
 #include "colours.h"
+#include "tile.h"
 #include "window.h"
 
 // void paint_tile(Tile *tile) {

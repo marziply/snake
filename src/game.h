@@ -25,4 +25,4 @@ bool is_next_frame(struct Tick *tick);
 
 double next_tick(struct Tick *tick);
 
-bool loop(struct Window *window, struct State *state);
+bool loop(struct Window *window, struct State  *state);

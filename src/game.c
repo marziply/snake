@@ -102,12 +102,14 @@ void paint(SDL_Renderer *renderer, struct Tile **tiles) {}
 bool loop(struct Window *window, struct State *state) {
   SDL_Event event;
 
-  if (is_next_frame(&state->tick))
+  if (is_next_frame(&state->tick)) {
     move(state->head.dir, &state->head.rect);
+  }
 
   if (SDL_PollEvent(&event)) {
-    if (event.type == SDL_QUIT)
+    if (event.type == SDL_QUIT) {
       return false;
+    }
 
     handle_event(state, &event);
   }
