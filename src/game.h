@@ -13,6 +13,7 @@ struct Tick {
 struct State {
   struct Tick tick;
   struct Tile head;
+  struct Tile food;
   Tail *tail;
 };
 
