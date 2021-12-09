@@ -1,30 +1,37 @@
 #include "game.h"
 #include "colours.h"
 #include "events.h"
+#include "utils.h"
 
-int randr(int min, int max) {
-  return rand() % (max + 1 - min) + min;
-}
-
-struct State init_state() {
-  int head_dx = randr(-1, 1);
-  int head_dy = (1 ^ abs(head_dx)) * ((randr(0, 1) * 2) - 1);
-  size_t tail_size = sizeof(struct Tile) * pow(N_TILES, 2);
-  SDL_Rect rect = {
-    .x = randr(0, N_TILES) * TILE_SIZE,
-    .y = randr(0, N_TILES) * TILE_SIZE,
-    .w = TILE_SIZE,
-    .h = TILE_SIZE,
-  };
+struct Direction rand_dir() {
+  int head_dx = rand_range(-1, 1);
+  int head_dy = (1 ^ abs(head_dx)) * ((rand_range(0, 1) * 2) - 1);
   struct Direction dir = {
     .x = head_dx,
     .y = head_dy,
   };
+
+  return dir;
+}
+
+struct SDL_Rect rand_rect() {
+  SDL_Rect rect = {
+    .x = rand_range(0, N_TILES) * TILE_SIZE,
+    .y = rand_range(0, N_TILES) * TILE_SIZE,
+    .w = TILE_SIZE,
+    .h = TILE_SIZE,
+  };
+
+  return rect;
+}
+
+struct State init_state() {
   struct Tile head = {
-    .dir = dir,
-    .rect = &rect,
+    .dir = rand_dir(),
+    .rect = rand_rect(),
     .colour = WHITE,
   };
+
   struct Tick tick = {
     .width = 30.0,
     .total = 0.0,
@@ -32,9 +39,9 @@ struct State init_state() {
   };
 
   struct State state = {
-    .tail = calloc(sizeof(struct Tile), tail_size),
-    .head = &head,
-    .tick = &tick,
+    .tail = calloc(TAIL_SIZE, sizeof(struct Tile)),
+    .tick = tick,
+    .head = head,
   };
 
   return state;
@@ -56,61 +63,58 @@ double next_tick(struct Tick *tick) {
   return 1000 / tick->width;
 }
 
-bool is_moveable(int x, int y) {
-  int edge = WIN_SIZE - TILE_SIZE;
+bool is_boundary(int pos, int delta) {
+  switch (delta) {
+  case 1:
+    return pos == WIN_EDGE;
+  case -1:
+    return pos == 0;
+  }
 
-  return y != 0 && x != 0 && x != edge && y != edge;
+  return false;
 }
 
-void move(SDL_Rect *rect, struct Direction dir) {
-  if (is_moveable(rect->x, rect->y)) {
+bool is_moveable(struct Direction dir, int x, int y) {
+  return !is_boundary(x, dir.x) && !is_boundary(y, dir.y);
+}
+
+void move(struct Direction dir, SDL_Rect *rect) {
+  if (is_moveable(dir, rect->x, rect->y)) {
     rect->x += dir.x * TILE_SIZE;
     rect->y += dir.y * TILE_SIZE;
   }
 }
 
-void paint(SDL_Renderer *renderer, struct State *state) {
-  // iter_tiles((void *) &direct_tile, map);
-  // iter_tiles((void *) &move_tile, map);
-
-  // for (int x = 0; x < WIN_TILE_WIDTH; x++) {
-  //   for (int y = 0; y < WIN_TILE_WIDTH; y++) {
-  //     struct Tile tile = container->state.segments[x][y];
-  //   }
-  // }
-
-  SDL_Color col = state->head->colour;
+void paint(SDL_Renderer *renderer, struct Tile *head) {
+  SDL_Color col = head->colour;
 
   SDL_SetRenderDrawColor(renderer, col.r, col.g, col.b, col.a);
-  SDL_RenderFillRect(renderer, state->head->rect);
+  SDL_RenderFillRect(renderer, &head->rect);
 }
 
 bool loop(struct Window *window, struct State *state) {
-  struct Events events;
+  SDL_Event event;
 
-  // events.key_event.type = SDL_RegisterEvents(1);
-
-  if (is_next_frame(state->tick)) {
-    move(state->head->rect, state->head->dir);
+  if (is_next_frame(&state->tick)) {
+    move(state->head.dir, &state->head.rect);
   }
 
-  if (SDL_PollEvent(&events.sdl_event)) {
-    // exec_event(&events, &map);
-    if (events.sdl_event.type == SDL_QUIT) {
+  if (SDL_PollEvent(&event)) {
+    if (event.type == SDL_QUIT) {
       return false;
     }
+
+    handle_event(state, &event);
   }
 
-  paint(window->renderer, state);
-
-  // iter_tiles((void *) &paint_tiles, &map);
+  paint(window->renderer, &state->head);
 
   SDL_RenderPresent(window->renderer);
 
   SDL_SetRenderDrawColor(window->renderer, BLACK.r, BLACK.g, BLACK.b, 255);
   SDL_RenderClear(window->renderer);
 
-  SDL_Delay(next_tick(state->tick));
+  SDL_Delay(next_tick(&state->tick));
 
   return true;
 }

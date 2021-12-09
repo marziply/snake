@@ -1,5 +1,4 @@
 #include <SDL2/SDL.h>
-#include <stdbool.h>
 
 struct Direction {
   int x;
@@ -8,7 +7,7 @@ struct Direction {
 
 struct Tile {
   struct Direction dir;
-  SDL_Rect *rect;
+  SDL_Rect rect;
   SDL_Color colour;
 };
 

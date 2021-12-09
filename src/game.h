@@ -1,5 +1,7 @@
+#pragma once
 #include "tile.h"
 #include "window.h"
+#include <stdbool.h>
 
 typedef struct Tile Tail[N_TILES][N_TILES];
 
@@ -10,12 +12,14 @@ struct Tick {
 };
 
 struct State {
-  struct Tick *tick;
-  struct Tile *head;
+  struct Tick tick;
+  struct Tile head;
   Tail *tail;
 };
 
 struct State init_state();
+
+struct Direction rand_dir();
 
 bool is_next_frame(struct Tick *tick);
 

@@ -1,3 +1,4 @@
+#include "game.h"
 #include <SDL2/SDL.h>
 
 struct Events {
@@ -5,3 +6,5 @@ struct Events {
   SDL_Event key_event;
   SDL_Event update_event;
 };
+
+void handle_event(struct State *state, SDL_Event *event);
