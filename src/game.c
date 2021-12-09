@@ -83,6 +83,10 @@ bool is_moveable(struct Direction dir, int x, int y) {
   return !is_boundary(x, dir.x) && !is_boundary(y, dir.y);
 }
 
+bool positions_equal(SDL_Rect *rect_a, SDL_Rect *rect_b) {
+  return rect_a->x == rect_b->x && rect_a->y == rect_b->y;
+}
+
 void move(struct Direction dir, SDL_Rect *rect) {
   if (is_moveable(dir, rect->x, rect->y)) {
     rect->x += dir.x * TILE_SIZE;
@@ -104,6 +108,10 @@ bool loop(struct Window *window, struct State *state) {
 
   if (is_next_frame(&state->tick)) {
     move(state->head.dir, &state->head.rect);
+
+    if (positions_equal(&state->head.rect, &state->food.rect)) {
+      state->food.rect = rand_rect();
+    }
   }
 
   if (SDL_PollEvent(&event)) {
