@@ -1,4 +1,5 @@
 #include "events.h"
+#include "game.h"
 #include <stdbool.h>
 
 void handle_key(struct State *state, SDL_Keycode key) {

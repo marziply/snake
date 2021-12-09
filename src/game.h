@@ -1,4 +1,3 @@
-#pragma once
 #include "tile.h"
 #include "window.h"
 #include <stdbool.h>
