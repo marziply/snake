@@ -3,11 +3,9 @@
 #include <stdbool.h>
 
 void apply_dir(struct Tile *head, struct Direction dir) {
-  if (dirs_equal(inverse_dir(head->dir), dir)) {
-    return;
+  if (!dirs_equal(inverse_dir(head->dir), dir)) {
+    head->next_dir = dir;
   }
-
-  head->next_dir = dir;
 }
 
 void handle_key(struct Tile *head, SDL_Keycode key) {

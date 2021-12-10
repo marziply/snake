@@ -61,6 +61,20 @@ void update_positions(struct State *state) {
   for (int i = 0; i < state->index; i++) {
     struct Tile *tile = &state->snake[i];
 
+    for (int j = 2; j < state->index; j++) {
+      struct Tile *comp = &state->snake[j];
+
+      if (i == j) {
+        continue;
+      }
+
+      if (positions_equal(&tile->rect, &comp->rect)) {
+        printf("Game over!\nPoints: %d\n", state->index - 2);
+
+        exit(0);
+      }
+    }
+
     if (!dirs_equal(tile->next_dir, NONE)) {
       tile->dir = tile->next_dir;
       tile->next_dir = NONE;
