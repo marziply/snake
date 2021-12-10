@@ -62,8 +62,6 @@ void update_positions(struct State *state) {
     struct Tile *tile = &state->snake[i];
     struct Tile *prev = &state->snake[i - 1];
 
-    move_tile(tile->dir, &tile->rect);
-
     if (!dirs_equal(tile->next_dir, NONE)) {
       tile->dir = tile->next_dir;
       tile->next_dir = NONE;
@@ -72,6 +70,8 @@ void update_positions(struct State *state) {
     if (i > 1) {
       tile->next_dir = prev->dir;
     }
+
+    move_tile(tile->dir, &tile->rect);
   }
 }
 
