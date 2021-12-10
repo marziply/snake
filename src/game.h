@@ -2,7 +2,7 @@
 #include "window.h"
 #include <stdbool.h>
 
-typedef struct Tile Tail[N_TILES][N_TILES];
+typedef struct Tile Snake[SNAKE_LENGTH];
 
 struct Tick {
   double target;
@@ -10,10 +10,11 @@ struct Tick {
 };
 
 struct State {
+  int tail_index;
   struct Tick tick;
   struct Tile head;
   struct Tile food;
-  Tail *tail;
+  Snake *snake;
 };
 
 struct State init_state();

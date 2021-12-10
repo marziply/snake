@@ -27,7 +27,7 @@ struct SDL_Rect rand_rect() {
   return rect;
 }
 
-struct State init_state() {
+struct State init_state(Snake *snake) {
   struct Tile head = {
     .dir = rand_dir(),
     .rect = rand_rect(),
@@ -49,11 +49,15 @@ struct State init_state() {
   };
 
   struct State state = {
-    .tail = calloc(TAIL_SIZE, sizeof(struct Tile)),
+    .tail_index = 0,
+    .snake = snake,
     .tick = tick,
     .head = head,
     .food = food
   };
+
+  *snake[state.tail_index++] = food;
+  *snake[state.tail_index++] = head;
 
   return state;
 }
@@ -87,14 +91,15 @@ void move(struct Direction dir, SDL_Rect *rect) {
   }
 }
 
-void paint_tile(SDL_Renderer *renderer, struct Tile *head) {
-  SDL_Color col = head->colour;
+void paint(SDL_Renderer *renderer, Snake *snake, int length) {
+  for (int i = 0; i < length; i++) {
+    struct Tile *tile = snake[i];
+    SDL_Color col = tile->colour;
 
-  SDL_SetRenderDrawColor(renderer, col.r, col.g, col.b, col.a);
-  SDL_RenderFillRect(renderer, &head->rect);
+    SDL_SetRenderDrawColor(renderer, col.r, col.g, col.b, col.a);
+    SDL_RenderFillRect(renderer, &tile->rect);
+  }
 }
-
-void paint(SDL_Renderer *renderer, struct Tile **tiles) {}
 
 bool loop(struct Window *window, struct State *state) {
   SDL_Event event;
@@ -115,8 +120,7 @@ bool loop(struct Window *window, struct State *state) {
     handle_event(state, &event);
   }
 
-  paint_tile(window->renderer, &state->food);
-  paint_tile(window->renderer, &state->head);
+  paint(window->renderer, state->snake, state->tail_index);
 
   SDL_RenderPresent(window->renderer);
 
