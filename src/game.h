@@ -10,19 +10,19 @@ struct Tick {
 };
 
 struct State {
-  int tail_index;
+  int index;
   struct Tick tick;
-  struct Tile head;
-  struct Tile food;
-  Snake *snake;
+  Snake snake;
 };
 
 struct State init_state();
 
 struct Direction rand_dir();
 
-bool is_next_frame(struct Tick *tick);
+void move_tile(struct Direction dir, SDL_Rect *rect);
 
 double next_tick(struct Tick *tick);
+
+bool is_next_frame(struct Tick *tick);
 
 bool loop(struct Window *window, struct State  *state);

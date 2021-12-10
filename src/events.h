@@ -1,6 +1,9 @@
 #include <SDL2/SDL.h>
 
 struct State;
+
+struct Snake;
+
 struct Events {
   SDL_Event sdl_event;
   SDL_Event key_event;

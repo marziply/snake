@@ -14,9 +14,8 @@ int main(int argc, char **argv) {
 
   srand(time(0));
 
-  Snake *snake = calloc(SNAKE_SIZE, sizeof(struct Tile));
   struct Window window = init_window();
-  struct State state = init_state(snake);
+  struct State state = init_state();
 
   while (true) {
     if (!loop(&window, &state)) {

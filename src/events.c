@@ -2,23 +2,25 @@
 #include "game.h"
 #include <stdbool.h>
 
+void apply_dir(struct State *state, struct Direction dir) {
+  struct Tile *head = &state->snake[1];
+
+  head->next_dir = dir;
+}
+
 void handle_key(struct State *state, SDL_Keycode key) {
   switch (key) {
   case SDLK_w:
-    state->head.dir.x = 0;
-    state->head.dir.y = -1;
+    apply_dir(state, UP);
     break;
   case SDLK_s:
-    state->head.dir.x = 0;
-    state->head.dir.y = 1;
+    apply_dir(state, DOWN);
     break;
   case SDLK_a:
-    state->head.dir.x = -1;
-    state->head.dir.y = 0;
+    apply_dir(state, LEFT);
     break;
   case SDLK_d:
-    state->head.dir.x = 1;
-    state->head.dir.y = 0;
+    apply_dir(state, RIGHT);
     break;
   }
 }
