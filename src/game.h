@@ -5,9 +5,8 @@
 typedef struct Tile Tail[N_TILES][N_TILES];
 
 struct Tick {
+  double target;
   double width;
-  double total;
-  double step;
 };
 
 struct State {

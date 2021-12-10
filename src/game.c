@@ -44,9 +44,8 @@ struct State init_state() {
   };
 
   struct Tick tick = {
-    .width = 30.0,
-    .total = 0.0,
-    .step = 0.3
+    .target = 0.0,
+    .width = 250.0
   };
 
   struct State state = {
@@ -60,19 +59,13 @@ struct State init_state() {
 }
 
 bool is_next_frame(struct Tick *tick) {
-  if (tick->total >= tick->step * 1000) {
-    tick->total = 0.0;
+  if (SDL_TICKS_PASSED(SDL_GetTicks(), tick->target)) {
+    tick->target = SDL_GetTicks() + tick->width;
 
     return true;
   }
 
   return false;
-}
-
-double next_tick(struct Tick *tick) {
-  tick->total += tick->width;
-
-  return 1000 / tick->width;
 }
 
 bool is_boundary(int pos, int delta) {
@@ -129,8 +122,6 @@ bool loop(struct Window *window, struct State *state) {
 
   SDL_SetRenderDrawColor(window->renderer, BLACK.r, BLACK.g, BLACK.b, 255);
   SDL_RenderClear(window->renderer);
-
-  SDL_Delay(next_tick(&state->tick));
 
   return true;
 }
