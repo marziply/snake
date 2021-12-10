@@ -90,6 +90,25 @@ void update_positions(struct State *state) {
   }
 }
 
+void eat_food(struct State *state, struct Tile *food) {
+  struct Tile *prev = &state->snake[state->index - 1];
+  struct Direction dir = inverse_dir(prev->dir);
+
+  food->rect = rand_rect();
+  state->tick.width -= SPEED_MOD;
+  state->snake[state->index++] = (struct Tile) {
+    prev->dir,
+    NONE,
+    {
+      prev->rect.x + (dir.x * TILE_SIZE),
+      prev->rect.y + (dir.y * TILE_SIZE),
+      TILE_SIZE,
+      TILE_SIZE
+    },
+    WHITE
+  };
+}
+
 void paint(struct State *state, SDL_Renderer *renderer) {
   for (int i = 0; i < state->index; i++) {
     struct Tile *tile = &state->snake[i];
@@ -99,6 +118,10 @@ void paint(struct State *state, SDL_Renderer *renderer) {
     SDL_SetRenderDrawColor(renderer, col.r, col.g, col.b, col.a);
     SDL_RenderFillRect(renderer, &tile->rect);
   }
+
+  SDL_RenderPresent(renderer);
+  SDL_SetRenderDrawColor(renderer, BLACK.r, BLACK.g, BLACK.b, 255);
+  SDL_RenderClear(renderer);
 }
 
 bool loop(struct Window *window, struct State *state) {
@@ -116,31 +139,13 @@ bool loop(struct Window *window, struct State *state) {
 
   if (is_next_frame(&state->tick)) {
     if (positions_equal(&head->rect, &food->rect)) {
-      struct Tile *prev = &state->snake[state->index - 1];
-      struct Direction dir = inverse_dir(prev->dir);
-
-      food->rect = rand_rect();
-      state->snake[state->index++] = (struct Tile) {
-        prev->dir,
-        NONE,
-        {
-          prev->rect.x + (dir.x * TILE_SIZE),
-          prev->rect.y + (dir.y * TILE_SIZE),
-          TILE_SIZE,
-          TILE_SIZE
-        },
-        WHITE
-      };
+      eat_food(state, food);
     }
 
     update_positions(state);
   }
 
   paint(state, window->renderer);
-
-  SDL_RenderPresent(window->renderer);
-  SDL_SetRenderDrawColor(window->renderer, BLACK.r, BLACK.g, BLACK.b, 255);
-  SDL_RenderClear(window->renderer);
 
   return true;
 }
