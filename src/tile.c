@@ -23,8 +23,6 @@ struct SDL_Rect rand_rect() {
   };
 }
 
-// struct Tile create_tile();
-
 bool dirs_equal(struct Direction dir_a, struct Direction dir_b) {
   return dir_a.x == dir_b.x && dir_a.y == dir_b.y;
 }

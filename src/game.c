@@ -60,7 +60,6 @@ void move_tile(struct Direction dir, SDL_Rect *rect) {
 void update_positions(struct State *state) {
   for (int i = 0; i < state->index; i++) {
     struct Tile *tile = &state->snake[i];
-    struct Tile *prev = &state->snake[i - 1];
 
     if (!dirs_equal(tile->next_dir, NONE)) {
       tile->dir = tile->next_dir;
@@ -68,6 +67,8 @@ void update_positions(struct State *state) {
     }
 
     if (i > 1) {
+      struct Tile *prev = &state->snake[i - 1];
+
       tile->next_dir = prev->dir;
     }
 
@@ -96,7 +97,7 @@ bool loop(struct Window *window, struct State *state) {
       return false;
     }
 
-    handle_event(state, &event);
+    handle_event(head, &event);
   }
 
   if (is_next_frame(&state->tick)) {

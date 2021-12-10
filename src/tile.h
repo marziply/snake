@@ -1,3 +1,4 @@
+#pragma once
 #include <stdbool.h>
 #include <SDL2/SDL.h>
 
@@ -25,8 +26,6 @@ static struct Direction dirs[4] = {
   LEFT,
   RIGHT
 };
-
-struct Tile create_tile();
 
 struct Direction rand_dir();
 

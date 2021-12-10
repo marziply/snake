@@ -17,12 +17,10 @@ struct State {
 
 struct State init_state();
 
-struct Direction rand_dir();
-
 void move_tile(struct Direction dir, SDL_Rect *rect);
 
 double next_tick(struct Tick *tick);
 
 bool is_next_frame(struct Tick *tick);
 
-bool loop(struct Window *window, struct State  *state);
+bool loop(struct Window *window, struct State *state);

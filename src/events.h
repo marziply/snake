@@ -1,8 +1,5 @@
+#include "tile.h"
 #include <SDL2/SDL.h>
-
-struct State;
-
-struct Snake;
 
 struct Events {
   SDL_Event sdl_event;
@@ -10,4 +7,4 @@ struct Events {
   SDL_Event update_event;
 };
 
-void handle_event(struct State *state, SDL_Event *event);
+void handle_event(struct Tile *head, SDL_Event *event);
