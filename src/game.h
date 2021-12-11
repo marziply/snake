@@ -1,18 +1,25 @@
 #include "tile.h"
 #include "window.h"
 #include <stdbool.h>
-
-typedef struct Tile Snake[SNAKE_LENGTH];
+#include <SDL2/SDL_ttf.h>
 
 struct Tick {
   double target;
   double width;
 };
 
+struct Score {
+  char value[12];
+  TTF_Font *font;
+  SDL_Surface *surface;
+  SDL_Rect rect;
+};
+
 struct State {
-  int index;
+  struct Tile snake[SNAKE_LENGTH];
   struct Tick tick;
-  Snake snake;
+  struct Score score;
+  int index;
 };
 
 struct State init_state();

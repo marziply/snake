@@ -3,16 +3,39 @@
 #include "game.h"
 #include "utils.h"
 #include <stdlib.h>
+#include <SDL2/SDL_ttf.h>
+
+void update_score(struct Score *score, int value) {
+  sprintf(score->value, "%d", value);
+
+  score->surface = TTF_RenderText_Solid(
+    score->font,
+    score->value,
+    WHITE
+  );
+  score->rect = (SDL_Rect) {
+    5,
+    0,
+    score->surface->w,
+    score->surface->h
+  };
+}
 
 struct State init_state() {
+  const char *path = "/Library/fonts/Arial Unicode.ttf";
+
   struct Tick tick = {
     0.0,
     150.0
   };
 
+  struct Score score = {
+    .font = TTF_OpenFont(path, 24)
+  };
+
+  update_score(&score, 0);
+
   struct State state = {
-    2,
-    tick,
     {
       {
         NONE,
@@ -26,7 +49,10 @@ struct State init_state() {
         rand_rect(&state),
         WHITE
       }
-    }
+    },
+    tick,
+    score,
+    2
   };
 
   return state;
@@ -88,12 +114,17 @@ void eat_food(struct State *state, struct Tile *food) {
   };
   food->rect = rand_rect(state);
 
+  update_score(&state->score, state->index - 2);
+
   if (state->tick.width > MIN_SPEED) {
     state->tick.width -= SPEED_MOD;
   }
 }
 
 void paint(struct State *state, SDL_Renderer *renderer) {
+  SDL_SetRenderDrawColor(renderer, BLACK.r, BLACK.g, BLACK.b, 255);
+  SDL_RenderClear(renderer);
+
   for (int i = 0; i < state->index; i++) {
     struct Tile *tile = &state->snake[i];
 
@@ -103,9 +134,12 @@ void paint(struct State *state, SDL_Renderer *renderer) {
     SDL_RenderFillRect(renderer, &tile->rect);
   }
 
+  SDL_Texture *text_tex = SDL_CreateTextureFromSurface(
+    renderer,
+    state->score.surface
+  );
+  SDL_RenderCopy(renderer, text_tex, NULL, &state->score.rect);
   SDL_RenderPresent(renderer);
-  SDL_SetRenderDrawColor(renderer, BLACK.r, BLACK.g, BLACK.b, 255);
-  SDL_RenderClear(renderer);
 }
 
 bool loop(struct Window *window, struct State *state) {

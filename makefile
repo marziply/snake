@@ -6,8 +6,8 @@ BUILD_DIR = ./build
 C_FLAGS = $(DEV_C_FLAGS) -std=gnu18 -c
 SOURCES=$(wildcard src/*.c)
 OBJECTS = $(patsubst src/%.c,build/%.o,$(SOURCES))
-SDL_C_FLAGS := $(shell sdl2-config --cflags)
-SDL_LIBS := $(shell sdl2-config --libs)
+SDL_C_FLAGS := $(shell sdl2-config --cflags) 
+SDL_LIBS := $(shell sdl2-config --libs) -lSDL2_ttf
 
 all: $(EXE)
 
