@@ -4,6 +4,7 @@
 #define N_TILES 20
 #define TILE_SIZE 25
 #define SPEED_MOD 5.0
+#define MIN_SPEED 50.0
 #define WIN_TITLE "Snake"
 #define WIN_SIZE (TILE_SIZE * (N_TILES + 1))
 #define WIN_EDGE (WIN_SIZE - TILE_SIZE)

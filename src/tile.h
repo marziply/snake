@@ -8,6 +8,8 @@
 #define LEFT (struct Direction) { -1, 0 }
 #define RIGHT (struct Direction) { 1, 0 }
 
+struct State;
+
 struct Direction {
   int x;
   int y;
@@ -27,10 +29,14 @@ static struct Direction dirs[4] = {
   RIGHT
 };
 
+SDL_Rect rand_rect(struct State *state);
+
 struct Direction rand_dir();
 
 struct Direction inverse_dir(struct Direction dir);
 
 bool dirs_equal(struct Direction dir_a, struct Direction dir_b);
 
-SDL_Rect rand_rect();
+bool is_boundary(int pos, int delta);
+
+bool is_moveable(struct Direction dir, int x, int y);
