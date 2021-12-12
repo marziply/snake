@@ -66,6 +66,7 @@ void reset_tiles(struct State *state) {
 
   state->tail_index = 2;
   state->tick = init_tick();
+  state->speed.rect.x = WIN_SIZE;
 
   memset(state->snake, 0, SNAKE_SIZE);
   memmove(state->snake, tiles, 2 * sizeof(struct Tile));
