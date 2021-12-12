@@ -20,12 +20,13 @@ bool is_tile_vacant(struct State *state, SDL_Rect rect) {
   return true;
 }
 
-struct SDL_Rect rand_rect(struct State *state) {
+struct SDL_Rect rand_rect(struct State *state, int modifier) {
   SDL_Rect *positions = calloc(SNAKE_LENGTH, sizeof(SDL_Rect));
-  int free_index = 0;
+  int free_len = SNAKE_LENGTH - state->tail_index - modifier;
+  int free_idx = 0;
 
-  for (int x = 0; x < N_TILES; x++) {
-    for (int y = 0; y < N_TILES; y++) {
+  for (int x = modifier; x < N_TILES; x++) {
+    for (int y = 0; y < N_TILES - modifier; y++) {
       SDL_Rect rect = {
         (x * TILE_SIZE),
         (y * TILE_SIZE),
@@ -34,12 +35,12 @@ struct SDL_Rect rand_rect(struct State *state) {
       };
 
       if (is_tile_vacant(state, rect)) {
-        positions[free_index++] = rect;
+        positions[free_idx++] = rect;
       }
     }
   }
 
-  return positions[rand_range(0, SNAKE_LENGTH - state->index)];
+  return positions[rand_range(modifier, free_len)];
 }
 
 struct Direction rand_dir() {

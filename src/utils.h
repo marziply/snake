@@ -1,17 +1,24 @@
-#define tile_foreach(t_name)\
+#define text_foreach(var_name, array_name, len)\
   for (\
-    struct Tile *t_name ## _tile = state->snake;\
-    t_name ## _tile < &state->snake[SNAKE_LENGTH];\
-    t_name ## _tile++\
+    struct Text *var_name ## _text = array_name;\
+    var_name ## _text < &array_name[len];\
+    var_name ## _text++\
   )
 
-#define tile_foreach_index_from(t_name, i_from)\
-  struct Tile *t_name ## _tile = &state->snake[i_from];\
+#define tile_foreach(var_name)\
   for (\
-    int t_name ## _index = i_from;\
-    t_name ## _index < state->index;\
-    t_name ## _tile++,\
-    t_name ## _index++\
+    struct Tile *var_name ## _tile = state->snake;\
+    var_name ## _tile < &state->snake[SNAKE_LENGTH];\
+    var_name ## _tile++\
+  )
+
+#define tile_foreach_index_from(var_name, index_from)\
+  struct Tile *var_name ## _tile = &state->snake[index_from];\
+  for (\
+    int var_name ## _index = index_from;\
+    var_name ## _index < state->tail_index;\
+    var_name ## _tile++,\
+    var_name ## _index++\
   )
 
 #define tile_foreach_index(...) tile_foreach_index_from(__VA_ARGS__, 0)

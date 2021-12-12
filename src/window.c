@@ -7,7 +7,7 @@ struct Window init_window() {
     SDL_WINDOWPOS_UNDEFINED,
     SDL_WINDOWPOS_UNDEFINED,
     WIN_SIZE,
-    WIN_SIZE + FONT_SIZE,
+    WIN_SIZE + G_FONT_SIZE + TEXT_PADDING,
     SDL_WINDOW_OPENGL
   );
 
