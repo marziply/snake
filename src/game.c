@@ -53,7 +53,7 @@ void reset_tiles(struct State *state) {
     {
       NONE,
       NONE,
-      rand_rect(state, 1),
+      rand_rect(state, 0),
       RED
     },
     {
