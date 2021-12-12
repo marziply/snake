@@ -3,37 +3,40 @@
 #include "game.h"
 #include "utils.h"
 #include <stdlib.h>
+#include <string.h>
 #include <SDL2/SDL_ttf.h>
 
-void update_score(struct Score *score, int value) {
-  sprintf(score->value, "%d", value);
+char *tick_to_str(struct Tick *tick) {
+  char *result = calloc(32, sizeof(char));
+  char *speed = int_to_str(MAX_SPEED - tick->width);
 
-  score->surface = TTF_RenderText_Solid(
-    score->font,
-    score->value,
-    WHITE
-  );
-  score->rect = (SDL_Rect) {
-    5,
-    0,
-    score->surface->w,
-    score->surface->h
-  };
+  strcpy(result, speed);
+  strcat(result, " / ");
+  strcat(result, int_to_str(MAX_SPEED - MIN_SPEED));
+
+  return result;
 }
 
 struct State init_state() {
-  const char *path = "/Library/fonts/Arial Unicode.ttf";
+  TTF_Font *font = TTF_OpenFont(FONT_PATH, FONT_SIZE);
 
   struct Tick tick = {
     0.0,
-    150.0
+    MAX_SPEED
   };
 
-  struct Score score = {
-    .font = TTF_OpenFont(path, 24)
-  };
-
-  update_score(&score, 0);
+  struct Text current_score = create_text(
+    "0",
+    TEXT_PADDING,
+    WIN_SIZE - TEXT_PADDING,
+    font
+  );
+  struct Text speed = create_text(
+    tick_to_str(&tick),
+    WIN_SIZE,
+    WIN_SIZE - TEXT_PADDING,
+    font
+  );
 
   struct State state = {
     {
@@ -51,7 +54,8 @@ struct State init_state() {
       }
     },
     tick,
-    score,
+    current_score,
+    speed,
     2
   };
 
@@ -68,17 +72,21 @@ bool is_next_frame(struct Tick *tick) {
   return false;
 }
 
+void end_game(int points) {
+  printf("Game over!\nPoints: %i\n", points);
+
+  exit(0);
+}
+
 void update_positions(struct State *state) {
-  tile_foreach_index(p_tile, p_index) {
-    tile_foreach_index_from(c_tile, c_index, 2) {
+  tile_foreach_index(p) {
+    tile_foreach_index_from(c, 2) {
       if ((p_index == 0) || (p_index == c_index)) {
         continue;
       }
 
       if (SDL_RectEquals(&p_tile->rect, &c_tile->rect)) {
-        printf("Game over!\nPoints: %d\n", state->index - 2);
-
-        exit(0);
+        end_game(state->index - 2);
       }
     }
 
@@ -114,31 +122,25 @@ void eat_food(struct State *state, struct Tile *food) {
   };
   food->rect = rand_rect(state);
 
-  update_score(&state->score, state->index - 2);
-
   if (state->tick.width > MIN_SPEED) {
     state->tick.width -= SPEED_MOD;
   }
+
+  set_text_value(&state->current_score, int_to_str(state->index - 2));
+  set_text_value(&state->speed, tick_to_str(&state->tick));
 }
 
 void paint(struct State *state, SDL_Renderer *renderer) {
   SDL_SetRenderDrawColor(renderer, BLACK.r, BLACK.g, BLACK.b, 255);
   SDL_RenderClear(renderer);
 
-  for (int i = 0; i < state->index; i++) {
-    struct Tile *tile = &state->snake[i];
-
-    SDL_Color col = tile->colour;
-
-    SDL_SetRenderDrawColor(renderer, col.r, col.g, col.b, col.a);
-    SDL_RenderFillRect(renderer, &tile->rect);
+  tile_foreach(v) {
+    render_tile(v_tile, renderer);
   }
 
-  SDL_Texture *text_tex = SDL_CreateTextureFromSurface(
-    renderer,
-    state->score.surface
-  );
-  SDL_RenderCopy(renderer, text_tex, NULL, &state->score.rect);
+  render_text(&state->current_score, renderer);
+  render_text(&state->speed, renderer);
+
   SDL_RenderPresent(renderer);
 }
 

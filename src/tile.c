@@ -3,9 +3,16 @@
 #include "tile.h"
 #include "utils.h"
 
-bool tile_vacant(struct State *state, SDL_Rect rect) {
-  tile_foreach(tile) {
-    if (SDL_RectEquals(&rect, &tile->rect)) {
+void render_tile(struct Tile *tile, SDL_Renderer *renderer) {
+  SDL_Color col = tile->colour;
+
+  SDL_SetRenderDrawColor(renderer, col.r, col.g, col.b, col.a);
+  SDL_RenderFillRect(renderer, &tile->rect);
+}
+
+bool is_tile_vacant(struct State *state, SDL_Rect rect) {
+  tile_foreach(v) {
+    if (SDL_RectEquals(&rect, &v_tile->rect)) {
       return false;
     }
   }
@@ -26,7 +33,7 @@ struct SDL_Rect rand_rect(struct State *state) {
         TILE_SIZE
       };
 
-      if (tile_vacant(state, rect)) {
+      if (is_tile_vacant(state, rect)) {
         positions[free_index++] = rect;
       }
     }

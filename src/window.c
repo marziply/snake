@@ -1,5 +1,5 @@
 #include "error.h"
-#include "window.h"
+#include "game.h"
 
 struct Window init_window() {
   SDL_Window *sdl_window = SDL_CreateWindow(
@@ -7,7 +7,7 @@ struct Window init_window() {
     SDL_WINDOWPOS_UNDEFINED,
     SDL_WINDOWPOS_UNDEFINED,
     WIN_SIZE,
-    WIN_SIZE,
+    WIN_SIZE + FONT_SIZE,
     SDL_WINDOW_OPENGL
   );
 

@@ -29,6 +29,8 @@ static struct Direction dirs[4] = {
   RIGHT
 };
 
+void render_tile(struct Tile *tile, SDL_Renderer *renderer);
+
 SDL_Rect rand_rect(struct State *state);
 
 struct Direction rand_dir();
