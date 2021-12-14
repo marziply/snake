@@ -1,1 +1,1 @@
-void print_error(char *c);
+void handle_error(char *c, const char *(callback) ());

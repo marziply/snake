@@ -8,15 +8,11 @@
 
 int main(int argc, char **argv) {
   if (SDL_Init(SDL_INIT_VIDEO) < 0) {
-    printf("Error: %s\n", SDL_GetError());
-
-    exit(1);
+    handle_error("SDL_Init", SDL_GetError);
   }
 
   if (TTF_Init() < 0) {
-    printf("Error: %s\n", TTF_GetError());
-
-    exit(1);
+    handle_error("TTF_Init", TTF_GetError);
   }
 
   srand(time(0));

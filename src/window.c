@@ -17,9 +17,7 @@ struct Window init_window() {
   };
 
   if (window.renderer == NULL) {
-    print_error("Window");
-
-    exit(1);
+    handle_error("SDL_CreateWindow", SDL_GetError);
   }
 
   return window;
