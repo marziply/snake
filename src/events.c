@@ -56,21 +56,27 @@ void handle_game_key(struct State *state, SDL_Keycode key) {
 
   switch (key) {
   case SDLK_w:
+  case SDLK_UP:
     apply_dir(head, UP);
     break;
   case SDLK_s:
+  case SDLK_DOWN:
     apply_dir(head, DOWN);
     break;
   case SDLK_a:
+  case SDLK_LEFT:
     apply_dir(head, LEFT);
     break;
   case SDLK_d:
+  case SDLK_RIGHT:
     apply_dir(head, RIGHT);
     break;
   case SDLK_r:
     reset_tiles(state);
     break;
+  case SDLK_p:
   case SDLK_SPACE:
+  case SDLK_RETURN:
     state->mode = MENU;
     break;
   }
@@ -79,12 +85,16 @@ void handle_game_key(struct State *state, SDL_Keycode key) {
 void handle_menu_key(struct State *state, SDL_Keycode key) {
   switch (key) {
   case SDLK_w:
+  case SDLK_UP:
     state->select = prev_menu_item(state);
     break;
   case SDLK_s:
+  case SDLK_DOWN:
     state->select = next_menu_item(state);
     break;
+  case SDLK_p:
   case SDLK_SPACE:
+  case SDLK_RETURN:
     handle_menu_select(state);
     break;
   }
