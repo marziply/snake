@@ -20,16 +20,20 @@ int main(int argc, char **argv) {
 
   struct Window window = init_window();
   struct State state = init_state();
-  SDL_Event event = {};
+  SDL_Event event;
 
-  while (loop(&window, &state)) {
+  while (true) {
     while (SDL_PollEvent(&event)) {
       if (event.type == SDL_QUIT) {
-        return false;
+        fclose(state.bin);
+
+        return 0;
       }
 
       handle_event(&state, &event);
     }
+
+    loop(&window, &state);
   }
 
   return 0;

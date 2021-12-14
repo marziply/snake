@@ -1,6 +1,7 @@
 #include "colours.h"
 #include "game.h"
 #include "utils.h"
+#include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
 #include <SDL2/SDL_ttf.h>
@@ -13,16 +14,24 @@ struct Tick init_tick() {
 }
 
 struct State init_state() {
+  FILE *bin = fopen("./snake", "r+");
+
+  fseek(bin, -1, SEEK_END);
+
   TTF_Font *m_font = TTF_OpenFont(FONT_PATH, M_FONT_SIZE);
   TTF_Font *g_font = TTF_OpenFont(FONT_PATH, G_FONT_SIZE);
+
+  char *high_score = int_to_str(get_high_score(bin));
 
   struct Tick tick = init_tick();
 
   struct State state = {
+    .bin = bin,
     .mode = MENU,
     .select = PLAY,
     .tick = tick,
     create_text("0", TEXT_PADDING, WIN_SIZE, g_font),
+    create_text(high_score, 30, WIN_SIZE - 50, m_font),
     create_text(tick_to_str(&tick), WIN_SIZE, WIN_SIZE, g_font),
     {
       create_text("Play", 30, 30, m_font),
@@ -47,6 +56,19 @@ char *tick_to_str(struct Tick *tick) {
   return result;
 }
 
+int get_high_score(FILE *file) {
+  int score = fgetc(file);
+
+  fseek(file, -1, SEEK_END);
+
+  return score;
+}
+
+void set_high_score(FILE *file, int score) {
+  fputc(score, file);
+  fseek(file, -1, SEEK_END);
+}
+
 void reset_tiles(struct State *state) {
   struct Tile tiles[2] = {
     {
@@ -63,9 +85,9 @@ void reset_tiles(struct State *state) {
     }
   };
 
+  state->speed.rect.x = WIN_SIZE;
   state->tail_index = 2;
   state->tick = init_tick();
-  state->speed.rect.x = WIN_SIZE;
 
   memset(state->snake, 0, SNAKE_SIZE);
   memmove(state->snake, tiles, 2 * sizeof(struct Tile));
@@ -84,7 +106,11 @@ bool is_next_frame(struct Tick *tick) {
 }
 
 void end_game(struct State *state) {
-  printf("Game over!\nPoints: %i\n", state->tail_index - 2);
+  int score = state->tail_index - 2;
+
+  if (score > get_high_score(state->bin)) {
+    set_high_score(state->bin, score);
+  }
 
   state->mode = MENU;
 
@@ -92,8 +118,15 @@ void end_game(struct State *state) {
 }
 
 void update_text_values(struct State *state) {
-  set_text_value(&state->current_score, int_to_str(state->tail_index - 2));
+  int current_score = state->tail_index - 2;
+  int high_score = get_high_score(state->bin);
+
+  set_text_value(&state->current_score, int_to_str(current_score));
   set_text_value(&state->speed, tick_to_str(&state->tick));
+
+  if (current_score > high_score) {
+    set_text_value(&state->high_score, int_to_str(current_score));
+  }
 }
 
 void update_positions(struct State *state) {
@@ -151,6 +184,8 @@ void paint_menu(struct State *state, SDL_Renderer *renderer) {
   text_foreach(v, state->menu_items, N_MENU_ITEMS) {
     render_text(v_text, renderer);
   }
+
+  render_text(&state->high_score, renderer);
 }
 
 void paint_game(struct State *state, SDL_Renderer *renderer) {
@@ -178,7 +213,7 @@ void paint(struct State *state, SDL_Renderer *renderer) {
   SDL_RenderPresent(renderer);
 }
 
-bool loop(struct Window *window, struct State *state) {
+void loop(struct Window *window, struct State *state) {
   struct Tile *food = &state->snake[0];
   struct Tile *head = &state->snake[1];
 
@@ -191,6 +226,4 @@ bool loop(struct Window *window, struct State *state) {
   }
 
   paint(state, window->renderer);
-
-  return true;
 }

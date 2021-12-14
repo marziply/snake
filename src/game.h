@@ -27,20 +27,27 @@ struct Tick {
 };
 
 struct State {
+  FILE *bin;
+  int tail_index;
   enum Mode mode;
   enum Select select;
-  int tail_index;
   struct Tick tick;
   struct Text current_score;
+  struct Text high_score;
   struct Text speed;
   struct Text menu_items[N_MENU_ITEMS];
   struct Tile snake[SNAKE_LENGTH];
-  // struct Text high_score;
 };
 
 struct State init_state();
 
 struct Tick init_tick();
+
+char *tick_to_str(struct Tick *tick);
+
+int get_high_score(FILE *file);
+
+void set_high_score(FILE *file, int score);
 
 void move_tile(struct Direction dir, SDL_Rect *rect);
 
@@ -50,6 +57,4 @@ void update_text_values(struct State *state);
 
 void update_positions(struct State *state);
 
-char *tick_to_str(struct Tick *tick);
-
-bool loop(struct Window *window, struct State *state);
+void loop(struct Window *window, struct State *state);
