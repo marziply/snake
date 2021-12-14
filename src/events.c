@@ -3,12 +3,16 @@
 #include <stdbool.h>
 
 void apply_dir(struct Tile *head, struct Direction dir) {
+  // Provided the intended direction is not in the opposite direction of
+  // travel, sets the new direction to dir
   if (!dirs_equal(inverse_dir(head->dir), dir)) {
     head->next_dir = dir;
   }
 }
 
 void select_menu_item(struct Text *menu_items, int curr_idx, int sel_idx) {
+  // Simply sets the new colour for selected menu items with a loop around
+  // when selecting the first/last element
   struct Text *current_select = &menu_items[curr_idx];
   struct Text *next_select = &menu_items[sel_idx];
 

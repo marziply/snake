@@ -11,6 +11,8 @@ void render_tile(struct Tile *tile, SDL_Renderer *renderer) {
 }
 
 bool is_tile_vacant(struct State *state, SDL_Rect rect) {
+  // Loops through all tiles to check if it is currently vacant of any snake
+  // tiles by checking if their rect matches the current rect
   tile_foreach(v) {
     if (SDL_RectEquals(&rect, &v_tile->rect)) {
       return false;
@@ -24,6 +26,8 @@ struct SDL_Rect rand_rect(struct State *state, int modifier) {
   SDL_Rect *positions = calloc(SNAKE_LENGTH, sizeof(SDL_Rect));
   int free_idx = 0;
 
+  // Iterates over all possible tile values to generate a one dimensional
+  // array so a tile can be selected randomly
   for (int x = modifier; x < N_TILES - modifier; x++) {
     for (int y = modifier; y < N_TILES - modifier; y++) {
       SDL_Rect rect = {
@@ -33,6 +37,8 @@ struct SDL_Rect rand_rect(struct State *state, int modifier) {
         TILE_SIZE
       };
 
+      // Append to the positions array only if that particular tile is
+      // vacant
       if (is_tile_vacant(state, rect)) {
         positions[free_idx++] = rect;
       }
@@ -58,6 +64,7 @@ bool dirs_equal(struct Direction dir_a, struct Direction dir_b) {
 }
 
 bool is_boundary(int pos, int delta) {
+  // Checks if pos is equal to one of either 0 or WIN_EDGE
   return delta ? pos == ((delta + 1) / 2) * WIN_EDGE : false;
 }
 

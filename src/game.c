@@ -16,11 +16,16 @@ struct Tick init_tick() {
 struct State init_state() {
   FILE *bin = fopen("./snake", "r+");
 
+  // Set initial index of file to the last byte
   fseek(bin, -1, SEEK_END);
 
+  // Initial fonts with varying sizes for their respective locations within
+  // the game
   TTF_Font *m_font = TTF_OpenFont(FONT_PATH, M_FONT_SIZE);
   TTF_Font *g_font = TTF_OpenFont(FONT_PATH, G_FONT_SIZE);
 
+  // Initial high score value derived from the last byte of the binary, acting
+  // as state without having to write to a separate file
   char *high_score = int_to_str(get_high_score(bin));
 
   struct Tick tick = init_tick();
@@ -39,6 +44,7 @@ struct State init_state() {
     }
   };
 
+  // Sets initial tile positions and text colours
   reset_tiles(&state);
   set_text_colour(state.menu_items, RED);
 
@@ -46,6 +52,9 @@ struct State init_state() {
 }
 
 char *tick_to_str(struct Tick *tick) {
+  // 12 bytes for the speed number
+  // 12 bytes for the total number
+  // 8 bytes for the " / "
   char *result = calloc(32, sizeof(char));
   char *speed = int_to_str(MAX_SPEED - tick->width);
 
@@ -70,6 +79,8 @@ void set_high_score(FILE *file, int score) {
 }
 
 void reset_tiles(struct State *state) {
+  // Inital array of tiles for the snake, with randomly set X and Y positions
+  // and randomly set directions
   struct Tile tiles[2] = {
     {
       NONE,
@@ -89,6 +100,8 @@ void reset_tiles(struct State *state) {
   state->tail_index = 2;
   state->tick = init_tick();
 
+  // Clear the current state of snake tiles and then move the initial
+  // state above into it
   memset(state->snake, 0, SNAKE_SIZE);
   memmove(state->snake, tiles, 2 * sizeof(struct Tile));
 
@@ -108,6 +121,8 @@ bool is_next_frame(struct Tick *tick) {
 void end_game(struct State *state) {
   int score = state->tail_index - 2;
 
+  // Sets the last byte of the binary to the current score value if it beats
+  // the current high score value stored there
   if (score > get_high_score(state->bin)) {
     set_high_score(state->bin, score);
   }
@@ -118,34 +133,50 @@ void end_game(struct State *state) {
 }
 
 void update_text_values(struct State *state) {
+  // No need to store the high score anywhere as it can be inferred from
+  // the tail index minus the food and head tiles
   int current_score = state->tail_index - 2;
   int high_score = get_high_score(state->bin);
 
   set_text_value(&state->current_score, int_to_str(current_score));
   set_text_value(&state->speed, tick_to_str(&state->tick));
 
+  // Update the high score text value on the menu screen only if it beats
+  // the current high score
   if (current_score > high_score) {
     set_text_value(&state->high_score, int_to_str(current_score));
   }
 }
 
 void update_positions(struct State *state) {
+  // Iterate over all snake tiles to update their current positions to their
+  // respective next_dir values
   tile_foreach_index(p) {
+    // Check for collisions with other snake tiles
     tile_foreach_index_from(c, 2) {
+      // Skips the iteration if the tile matches the tile in the parent loop
+      // or if it is equal to 0, which will always be the index of the food
+      // tile
       if ((p_index == 0) || (p_index == c_index)) {
         continue;
       }
 
+      // Check for any collisions by check the equality between the parent
+      // loop tile and the current loop tile
       if (SDL_RectEquals(&p_tile->rect, &c_tile->rect)) {
         end_game(state);
       }
     }
 
+    // Only move the tile if it currently has a direction set, which prevents
+    // the food tile from moving anywhere
     if (!dirs_equal(p_tile->next_dir, NONE)) {
       p_tile->dir = p_tile->next_dir;
       p_tile->next_dir = NONE;
     }
 
+    // Updates the next_dir value only if it isn't the head tile, which always
+    // has an index value of 0
     if (p_index > 1) {
       struct Tile *prev = &state->snake[p_index - 1];
 
@@ -160,6 +191,8 @@ void eat_food(struct State *state, struct Tile *food) {
   struct Tile *prev = &state->snake[state->tail_index - 1];
   struct Direction dir = inverse_dir(prev->dir);
 
+  // Appends a new snake tile to the end of the snake, following the direction
+  // of the previous tail tile
   state->snake[state->tail_index++] = (struct Tile) {
     prev->dir,
     NONE,
@@ -173,6 +206,8 @@ void eat_food(struct State *state, struct Tile *food) {
   };
   food->rect = rand_rect(state, 0);
 
+  // Limits the speed from increasing past MIN_SPEED so the game remains
+  // playable
   if (state->tick.width > MIN_SPEED) {
     state->tick.width -= SPEED_MOD;
   }
@@ -181,6 +216,7 @@ void eat_food(struct State *state, struct Tile *food) {
 }
 
 void paint_menu(struct State *state, SDL_Renderer *renderer) {
+  // Paint each menu item
   text_foreach(v, state->menu_items, N_MENU_ITEMS) {
     render_text(v_text, renderer);
   }
@@ -189,6 +225,7 @@ void paint_menu(struct State *state, SDL_Renderer *renderer) {
 }
 
 void paint_game(struct State *state, SDL_Renderer *renderer) {
+  // Paint each snake tile
   tile_foreach(v) {
     render_tile(v_tile, renderer);
   }
@@ -214,9 +251,12 @@ void paint(struct State *state, SDL_Renderer *renderer) {
 }
 
 void loop(struct Window *window, struct State *state) {
+  // Easy "shortcuts" to the food and head tiles
   struct Tile *food = &state->snake[0];
   struct Tile *head = &state->snake[1];
 
+  // Moves the tiles only on each subsequent new "frame", as configured
+  // via the tick value on state
   if (is_next_frame(&state->tick) && (state->mode == GAME)) {
     if (SDL_RectEquals(&head->rect, &food->rect)) {
       eat_food(state, food);
