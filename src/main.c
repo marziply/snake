@@ -1,4 +1,5 @@
 #include "error.h"
+#include "events.h"
 #include "game.h"
 #include <stdio.h>
 #include <stdlib.h>
@@ -19,10 +20,15 @@ int main(int argc, char **argv) {
 
   struct Window window = init_window();
   struct State state = init_state();
+  SDL_Event event = {};
 
-  while (true) {
-    if (!loop(&window, &state)) {
-      break;
+  while (loop(&window, &state)) {
+    while (SDL_PollEvent(&event)) {
+      if (event.type == SDL_QUIT) {
+        return false;
+      }
+
+      handle_event(&state, &event);
     }
   }
 

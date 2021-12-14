@@ -1,5 +1,4 @@
 #include "colours.h"
-#include "events.h"
 #include "game.h"
 #include "utils.h"
 #include <stdlib.h>
@@ -182,17 +181,8 @@ void paint(struct State *state, SDL_Renderer *renderer) {
 bool loop(struct Window *window, struct State *state) {
   struct Tile *food = &state->snake[0];
   struct Tile *head = &state->snake[1];
-  SDL_Event event;
 
-  while (SDL_PollEvent(&event)) {
-    if (event.type == SDL_QUIT) {
-      return false;
-    }
-
-    handle_event(state, &event);
-  }
-
-  if ((state->mode == GAME) && is_next_frame(&state->tick)) {
+  if (is_next_frame(&state->tick) && (state->mode == GAME)) {
     if (SDL_RectEquals(&head->rect, &food->rect)) {
       eat_food(state, food);
     }
