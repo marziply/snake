@@ -4,8 +4,6 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
-#include <unistd.h>
-#include <errno.h>
 #include <SDL2/SDL_ttf.h>
 
 struct Tick init_tick() {
@@ -16,7 +14,7 @@ struct Tick init_tick() {
 }
 
 struct State init_state() {
-  FILE *bin = open_bin();
+  FILE *bin = open_bin("r");
 
   // Initial fonts with varying sizes for their respective locations within
   // the game
@@ -48,21 +46,6 @@ struct State init_state() {
   set_text_colour(state.menu_items, RED);
 
   return state;
-}
-
-FILE *open_bin() {
-  size_t len = 128;
-  char path[len];
-
-  getcwd(path, len);
-  strcat(path, "/snake");
-
-  FILE *bin = fopen(path, "rw");
-
-  // Set initial index of file to the last byte
-  fseek(bin, -1, SEEK_END);
-
-  return bin;
 }
 
 char *tick_to_str(struct Tick *tick) {
@@ -138,7 +121,7 @@ void end_game(struct State *state) {
   // Sets the last byte of the binary to the current score value if it beats
   // the current high score value stored there
   if (score > get_high_score(state->bin)) {
-    set_high_score(state->bin, score);
+    // set_high_score(state->bin, score);
   }
 
   state->mode = MENU;

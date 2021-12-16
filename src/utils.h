@@ -1,3 +1,5 @@
+#include <stdio.h>
+
 #define text_foreach(var_name, array_name, len)\
   for (\
     struct Text *var_name ## _text = array_name;\
@@ -24,3 +26,7 @@
 #define tile_foreach_index(...) tile_foreach_index_from(__VA_ARGS__, 0)
 
 int rand_range(int min, int max);
+
+char *int_to_str(int value);
+
+FILE *open_bin();

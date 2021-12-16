@@ -16,14 +16,6 @@ struct Text create_text(char *value, int x, int y, TTF_Font *font) {
   return text;
 }
 
-char *int_to_str(int value) {
-  char *result = calloc(12, sizeof(char));
-
-  sprintf(result, "%i", value);
-
-  return result;
-}
-
 void render_text(struct Text *text, SDL_Renderer *renderer) {
   SDL_Texture *texture = SDL_CreateTextureFromSurface(renderer, text->surface);
   SDL_RenderCopy(renderer, texture, NULL, &text->rect);

@@ -15,8 +15,6 @@ struct Text {
 
 struct Text create_text(char *value, int x, int y, TTF_Font *font);
 
-char *int_to_str(int value);
-
 void render_text(struct Text *text, SDL_Renderer *renderer);
 
 void set_text_colour(struct Text *text, SDL_Color colour);
