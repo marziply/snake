@@ -100,16 +100,25 @@ void handle_menu_key(struct State *state, SDL_Keycode key) {
   }
 }
 
+void handle_key_up(struct State *state, SDL_Keycode key) {
+  if (key == SDLK_q || key == SDLK_ESCAPE) {
+    exit(0);
+  }
+
+  switch (state->mode) {
+  case MENU:
+    handle_menu_key(state, key);
+    break;
+  case GAME:
+    handle_game_key(state, key);
+    break;
+  }
+}
+
 void handle_event(struct State *state, SDL_Event *event) {
   switch (event->type) {
   case SDL_KEYUP:
-    switch (state->mode) {
-    case MENU:
-      handle_menu_key(state, event->key.keysym.sym);
-      break;
-    case GAME:
-      handle_game_key(state, event->key.keysym.sym);
-      break;
-    }
+    handle_key_up(state, event->key.keysym.sym);
+    break;
   }
 }

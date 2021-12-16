@@ -22,9 +22,7 @@ int main(int argc, char **argv) {
   struct State state = init_state();
   SDL_Event event;
 
-  // Delay the app slightly so the ENTER event is not registered from
-  // the terminal running the binary
-  SDL_Delay(250);
+  SDL_Delay(1000);
 
   while (true) {
     while (SDL_PollEvent(&event)) {

@@ -43,6 +43,8 @@ struct State init_state();
 
 struct Tick init_tick();
 
+FILE *open_bin();
+
 char *tick_to_str(struct Tick *tick);
 
 int get_high_score(FILE *file);
